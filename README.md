@@ -3,7 +3,7 @@ A module for the MagicMirror project which creates a table filled with a list ga
 
 ## Installation
 ````
-git clone https://github.com/0nikola1/MMM-BTCFees/.git
+git clone https://github.com/0nikola1/MMM-BTCFees.git
 cd MMM-BTCFees
 npm install
 ````
