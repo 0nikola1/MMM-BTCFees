@@ -206,7 +206,7 @@ Module.register("MMM-BTCFees", {
 	timeDifference: function (timestamp1,timestamp2) {
 		
 		var difference = timestamp1 - timestamp2;
-		var minutesDifference = Math.floor(difference/60);
+		var minutesDifference = Math.round(difference/60,0);
 		return minutesDifference;
 	}
 });
