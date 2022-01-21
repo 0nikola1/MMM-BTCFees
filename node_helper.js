@@ -31,7 +31,14 @@ module.exports = NodeHelper.create({
 		});
 
 	},
-
+	
+	getBlock: function (urlBlock) {
+		var self = this;
+		fetch(urlBlock).then(response => response.json()).then(json => {
+			// Send the json data back with the url to distinguish it on the receiving part
+			self.sendSocketNotification("MMM-BTCFees_BLOCK_RESULT", {url: urlBlock, data: json});
+		});
+	},
 	//Subclass socketNotificationReceived received.
 	socketNotificationReceived: function (notification, url) {
 		if (notification === "MMM-BTCFees_GET_JSON") {
@@ -39,6 +46,9 @@ module.exports = NodeHelper.create({
 		}
 		if (notification === "MMM-BTCFees_GET_BTC") {
 			this.getBtc(url);
+		}
+		if (notification === "MMM-BTCFees_GET_BLOCK") {
+			this.getBlock(url);
 		}
 	}
 });
