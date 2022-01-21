@@ -4,11 +4,13 @@ Module.register("MMM-BTCFees", {
 
 	jsonData: "",
 	btcData: 0,
+	btcBlock: "",
 
 	// Default module config.
 	defaults: {
 		url: "https://mempool.space/api/v1/fees/recommended",
 		urlBtc: "https://api.cryptonator.com/api/ticker/btc-usd",
+		urlBlock: "https://mempool.space/api/blocks",
 		arrayName: null,
 		keepColumns: [],
 		size: 0,
@@ -33,6 +35,7 @@ Module.register("MMM-BTCFees", {
 	getJson: function () {
 		this.sendSocketNotification("MMM-BTCFees_GET_JSON", this.config.url);
 		this.sendSocketNotification("MMM-BTCFees_GET_BTC", this.config.urlBtc);
+		this.sendSocketNotification("MMM-BTCFees_GET_BLOCK", this.config.urlBlock);
 	},
 
 
@@ -55,6 +58,15 @@ Module.register("MMM-BTCFees", {
 				this.updateDom(500);
 			}
 		}
+		if (notification === "MMM-BTCFees_BLOCK_RESULT") {
+			// Only continue if the notification came from the request we made
+			// This way we can load the module more than once
+			if (payload.url === this.config.urlBlock)
+			{
+				this.blockData = payload.data;
+				this.updateDom(500);
+			}
+		}
 	},
 
 	// Override dom generator.
@@ -69,6 +81,7 @@ Module.register("MMM-BTCFees", {
 		
 		var table = document.createElement("table");
 		var tbody = document.createElement("tbody");
+		var cellBlock = this.getTableBlock();
 		
 		var items = [];
 		if (this.config.arrayName) {
@@ -97,18 +110,23 @@ Module.register("MMM-BTCFees", {
 		}
 
 		table.appendChild(tbody);
+		table.appendChild(cellBlock);
 		wrapper.appendChild(table);
 		return wrapper;
 	},
 
 	getTableRow: function (jsonObject) {
 		var row = document.createElement("tr");
+		var row2 = document.createElement("tr");
 		for (var key in jsonObject) {
 			var cell = document.createElement("td");
 			var cell3 = document.createElement("td");
+
+	
 			var valueToDisplay = "";
 			var usdToDisplay = "";
 			var btcDataa = "";
+			var Blocks = "test";
 			if (key === "icon") {
 				cell.classList.add("fa", jsonObject[key]);
 			}
@@ -147,6 +165,28 @@ Module.register("MMM-BTCFees", {
 		}
 		return row;
 	},
+	getTableBlock: function () {
+		var row = document.createElement("tr");
+		var cell5 = document.createElement("td");
+		var cell6 = document.createElement("td");
+		var cell7 = document.createElement("td");
+			var valueToDisplay = "Last block minutes:";
+			var minutesToDisplay = this.timeDifference(this.blockData[0].timestamp,this.blockData[1].timestamp);
+
+
+			var cellText = document.createTextNode(valueToDisplay);
+			var cellText1 = document.createTextNode("");
+			var cellText2 = document.createTextNode(minutesToDisplay);
+
+		cell5.appendChild(cellText);
+		cell6.appendChild(cellText1);
+		cell7.appendChild(cellText2);
+
+		row.appendChild(cell5);
+		row.appendChild(cell6);
+		row.appendChild(cell7);
+		return row;
+	},
 
 
 	//get BTC price
@@ -162,6 +202,11 @@ Module.register("MMM-BTCFees", {
 		else {
 			return " ";
 		}
+	},
+	timeDifference: function (timestamp1,timestamp2) {
+		
+		var difference = timestamp1 - timestamp2;
+		var minutesDifference = Math.floor(difference/60);
+		return minutesDifference;
 	}
-
 });
