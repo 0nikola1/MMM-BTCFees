@@ -39,5 +39,3 @@ Configuration:
                 },
 ```
 
-
-![](example.jpeg)
