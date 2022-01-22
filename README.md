@@ -7,6 +7,9 @@ git clone https://github.com/0nikola1/MMM-BTCFees.git
 cd MMM-BTCFees
 npm install
 ````
+## Example:
+
+![](example.jpeg)
 
 ## Config Options
 | **Option** | **Default** | **Description** |
@@ -35,3 +38,6 @@ Configuration:
                        }
                 },
 ```
+
+
+![](example.jpeg)
